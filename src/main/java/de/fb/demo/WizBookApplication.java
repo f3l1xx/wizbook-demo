@@ -1,18 +1,10 @@
 package de.fb.demo;
 
-import io.dropwizard.Application;
-import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.servlets.tasks.Task;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import io.dropwizard.views.ViewBundle;
-
 import java.io.PrintWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 
 import de.fb.demo.entity.WIZARD_HAT;
@@ -20,6 +12,12 @@ import de.fb.demo.entity.Wizard;
 import de.fb.demo.health.WizBookHealth;
 import de.fb.demo.resource.WizardResource;
 import de.fb.demo.store.WizardStore;
+import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.servlets.tasks.Task;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
 
 /**
  * Main entry point of the application. In the initialize()-method new bundles are registered. In
@@ -39,12 +37,7 @@ public class WizBookApplication extends Application<WizBookConfig> {
 
 		bootstrap.addBundle(new AssetsBundle("/static-content", "/static", "index.html"));
 
-		bootstrap.addBundle(new ViewBundle<WizBookConfig>() {
-			@Override
-			public ImmutableMap<String, ImmutableMap<String, String>> getViewConfiguration(WizBookConfig config) {
-				return config.getViewRendererConfiguration();
-			}
-		});
+		bootstrap.addBundle(new ViewBundle<WizBookConfig>());
 	}
 
 	@Override

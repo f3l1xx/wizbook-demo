@@ -8,7 +8,7 @@
 	<version>0.1-SNAPSHOT</version>
 
 	<properties>
-		<dropwizard.version>0.8.0</dropwizard.version>
+		<dropwizard.version>1.0.0-rc2</dropwizard.version>
 	</properties>
 
 	<dependencies>
