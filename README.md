@@ -1,2 +1,4 @@
 # wizbook-demo
-Dropwizard Demo-Project. A small phone book for Wizard contacts.
+Dropwizard Demo Application named WizBook.
+
+Contains examples on dropwizard resources, health checks, tasks, views, configuration and bean validation. 
