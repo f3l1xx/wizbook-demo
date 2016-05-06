@@ -15,6 +15,11 @@ public class WizardView extends View {
 
 	private final Wizard wizard;
 
+	//only for Jackson in tests
+	public WizardView() {
+		this(null);
+	}
+	
 	public WizardView(Wizard wizard) {
 		super("wizard.mustache");
 		this.wizard = wizard;

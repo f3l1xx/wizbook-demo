@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
 
@@ -26,13 +28,17 @@ import de.fb.demo.store.WizardStore;
 import de.fb.demo.view.WizardView;
 
 /**
- * WizardResource defines the RESTful methods which are offered by this dropwizard application.
- * JAX-RS is used to define methods, paths and media types.
+ * WizardResource defines the RESTful methods which are offered by this
+ * dropwizard application. JAX-RS is used to define methods, paths and media
+ * types.
  */
 @Path("wizards")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class WizardResource {
+
+	@VisibleForTesting
+	public static final Wizard PONG_WIZARD = new Wizard("PongWizard", WIZARD_HAT.POINTY_HAT, "0800 3512");
 
 	private final WizardStore store;
 
@@ -47,7 +53,7 @@ public class WizardResource {
 	@GET
 	public Wizard getPongWizard() {
 		log.debug("ping was called...");
-		return new Wizard("PongWizard", WIZARD_HAT.POINTY_HAT, "0800 3512");
+		return PONG_WIZARD;
 	}
 
 	@Path("{name}")
@@ -67,15 +73,21 @@ public class WizardResource {
 	}
 
 	/**
-	 * This method delivers either an fully fledged html page when it's called with a web browser
-	 * (Accept: text/html) or it delivers the raw {@link Hipster} json representation when accessed
-	 * with header "Accept: application/json".
+	 * This method delivers either an fully fledged html page when it's called
+	 * with a web browser (Accept: text/html) or it delivers the raw
+	 * {@link Hipster} json representation when accessed with header
+	 * "Accept: application/json".
 	 */
 	@GET
 	@Path("{name}/view")
 	@Produces({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	public WizardView getWizardView(@PathParam("name") String name) {
-		return new WizardView(getWizard(name).get());
+		Optional<Wizard> wizard = getWizard(name);
+		if (wizard.isPresent()) {
+			return new WizardView(wizard.get());
+		} else {
+			throw new NotFoundException();
+		}
 	}
 
 }
